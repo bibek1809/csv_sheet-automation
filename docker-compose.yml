@@ -1,0 +1,15 @@
+version: "3"
+services:
+  csv-datamart-api:
+    image: csv-datamart:v1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 4448:4448
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    network_mode: host
