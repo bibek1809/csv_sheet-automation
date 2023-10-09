@@ -16,15 +16,15 @@ class JdbcDatabase:
         self.connection = None
 
     def get_connection(self):
-        if self.connection is None:
-            # print(self.connection_properties)
-            try:
-                self.connection = jaydebeapi.connect(
-                    **self.connection_properties)
-            except Exception as e:
-                logger.error(e)
-                self.clear_connection()
-                raise BaseException(str(e))
+        # if self.connection is None:
+        #     # print(self.connection_properties)
+        #     try:
+        self.connection = jaydebeapi.connect(
+            **self.connection_properties)
+            # except Exception as e:
+            #     logger.error(e)
+            #     self.clear_connection()
+            #     raise BaseException(str(e))
         return self.connection
 
 
@@ -104,3 +104,4 @@ class JdbcDataSource:
             columns = [column[0] for column in cursor.description]
             records = [r for r in result_set]
             return columns, records
+

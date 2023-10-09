@@ -14,7 +14,7 @@ class JDBCRepository:
         return self.jdbcDataSource.execute(f"SELECT * FROM {self.entity_name} order by 1 desc limit 1")
 
     def find_all(self):
-        return self.jdbcDataSource.execute(f"SELECT * FROM {self.entity_name}")
+        return self.jdbcDataSource.execute(f"SELECT * FROM {self.entity_name} where is_deleted = 0")
 
     def find(self, entity):
         where_conditions = dict(filter(lambda i: i[1] is not None, entity.to_json().items()))
@@ -26,6 +26,10 @@ class JDBCRepository:
 
     def find_by_id(self, id):
         query = f"SELECT * FROM {self.entity_name} WHERE {self.id} = {id} and is_deleted = 0"
+        return self.jdbcDataSource.execute(query)
+    
+    def find_by_id_all_status(self, id):
+        query = f"SELECT * FROM {self.entity_name} WHERE {self.id} = {id}"
         return self.jdbcDataSource.execute(query)
 
     def save(self, entity):
@@ -71,3 +75,24 @@ class JDBCRepository:
 
         else:
             return "'" + val.replace("'", "''") + "'"
+
+    def find_by_values(self, json_data, table_name):
+        column_names = list(json_data.keys())
+        column_values = list(json_data.values())
+        if not column_names:
+            raise ValueError("No column names provided in the query_data")
+
+        # Create a list of conditions for each column-value pair
+        conditions = [f"{col} IS NULL" if val == "Null" else f"{col} = '{val}'" for col, val in zip(column_names, column_values)]
+        #conditions = [f"{col} = '{val}'" for col, val in zip(column_names, column_values)]
+
+        # Join the conditions with 'AND' to create the WHERE clause
+        where_clause = " AND ".join(conditions)
+
+        # Construct the SQL query with column names and values
+        sql_query = f"SELECT * FROM {table_name} WHERE {where_clause}"
+        print(sql_query)
+        # Execute the query with the provided values
+        result = self.jdbcDataSource.execute(sql_query)
+
+        return result

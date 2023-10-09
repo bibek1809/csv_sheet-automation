@@ -4,7 +4,6 @@ from services.FileService import FileService
 from utils import Configuration
 from utils.csv_schema_infererence import CsvSchemaInference, SchemaInference
 
-
 class SchemaService:
 
     def __init__(self, fileService: FileService):
@@ -15,7 +14,7 @@ class SchemaService:
 
     def generate_schema(self, file):
         csv_infer = CsvSchemaInference(portion=2, max_length=100000, batch_size=20000, acc=8, seed=10, header=True,
-                                       sep=file.seperator, conditions={})
+                                       sep=file.file_separator, conditions={})
         return list(csv_infer.run_inference(self.transform_storage_path + file.file_name).values())
 
     def get_schema(self, file_id):
@@ -35,13 +34,12 @@ class SchemaService:
     def merge_schema(self, schema_1, schema_2):
         return self.schema_inference.merge_schemas(schema_1, schema_2)
     
-    def find_date(self,schema):
-        Date_count = 0
-        for value in schema:
-            if "date" in value['name'].lower() or "date" in value['types_found']:
-                Date_count = Date_count+1
-        if Date_count != 0:
-            return True
-        else:
-            return False
-            
+    def check_match(self, schema_1, schema_2):
+        names_schema_1 = set(field["name"] for field in schema_1)
+        names_schema_2 = set(field["name"] for field in schema_2)
+        matching_names = names_schema_1.intersection(names_schema_2)
+        percent_matching = (len(matching_names) / len(names_schema_1)) * 100
+        return percent_matching
+
+
+

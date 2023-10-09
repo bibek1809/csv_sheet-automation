@@ -26,6 +26,7 @@ def before_request():
 
 @app.before_request
 def add_custom_header():
+    Configuration.create_directories()
     if request.endpoint != 'check_config':
         message = {
             "success": False,
@@ -42,7 +43,6 @@ def add_custom_header():
                 return message
         except Exception as e:
             return message
-    
 
 
 app.register_blueprint(FileController.file_blueprint)
@@ -54,8 +54,9 @@ app.register_blueprint(SpaceController.space_blueprint)
 def check_config():
     return Configuration.check_configuration()
 
-Configuration.create_directories()
+
 def start():
+    Configuration.check_configuration()
     app.run(port=4448, debug=True, threaded=True)
 
 

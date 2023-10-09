@@ -6,7 +6,7 @@ from transformation.Transformer import Transformer
 class DropcolTransformer(Transformer):
 
     def name(self):
-        return "drop_columns"
+        return "drop_column"
 
     def transform(self, dataframe: DataFrame, transformation_config: dict):
         """Parameters:
@@ -14,4 +14,4 @@ class DropcolTransformer(Transformer):
         - transformation_config: A dictionary containing the following keys:
             - 'COL': The name of the column to be drop.
         """
-        return dataframe.drop(columns=transformation_config["col"],inplace=True)
+        return dataframe.drop(columns=transformation_config["col"],inplace=False)

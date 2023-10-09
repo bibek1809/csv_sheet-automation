@@ -25,6 +25,7 @@ DREMIO_URL = env.get_or_default("dremio.url", "localhost:9047")
 DREMIO_USERNAME = env.get_or_default("dremio.username", "dremio")
 DREMIO_PASSWORD = env.get_or_default("dremio.password", "password")
 
+DATE_VALIDATION_LIMIT = env.get_or_default("data.date.validation", 10)
 
 def create_directories():
     dir_list = [RAW_FILE_PATH, TRANSFORM_FILE_PATH, BASE_FOLDER_NAME]

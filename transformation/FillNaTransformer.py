@@ -9,5 +9,5 @@ class FillNaTransformer(Transformer):
         return "fillNa"
 
     def transform(self, dataframe: DataFrame, transformation_config: dict):
-        dataframe[transformation_config["col"]].fillna(transformation_config["value"], inplace=True)
+        dataframe[transformation_config["col"]] = dataframe[transformation_config["col"]].fillna(transformation_config["value"], inplace=False)
         return dataframe

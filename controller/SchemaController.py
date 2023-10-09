@@ -81,6 +81,10 @@ def merge():
         _type_: _description_
     """
     data = request.json
+    if schema_service.check_match(data["schema_1"], data["schema_2"]) < 100:
+        return jsonify(constant.Schema_not_match_response),418
+    else:
+        pass
     merged_schema = schema_service.merge_schema(
         data["schema_1"], data["schema_2"])
     listed_merge_schema = list(merged_schema.values())

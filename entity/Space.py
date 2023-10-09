@@ -3,7 +3,7 @@ from entity.Entity import Entity
 
 class Space(Entity):
     def __init__(self, id=None, space_name=None, space_schema=None, s3_file_path=None, vds_path=None,
-                 created_date=None, updated_date=None, is_deleted=None):
+                 created_date=None, updated_date=None, is_deleted=None,status=None):
         self.id = id
         self.space_name = space_name
         self.space_schema = space_schema
@@ -12,3 +12,4 @@ class Space(Entity):
         self.created_date = created_date
         self.updated_date = updated_date
         self.is_deleted = is_deleted
+        self.status = status

@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, jsonify, request
-
+import time
 from database import DataSourceConfiguration
 from entity.File import File
 from entity.FileSpaceRegister import FileSpaceRegistry
@@ -44,7 +44,7 @@ def get_all_spaces():
 @space_blueprint.route("/<space_id>/", methods=['GET'])
 def get_space_by_id(space_id):
     spaces = space_service.find_by_id(space_id)
-    if len(spaces):
+    if spaces and len(spaces):
         space = spaces[0]
         if space["space_schema"]:
             space["space_schema"] = json.loads(space["space_schema"])
@@ -63,17 +63,23 @@ def save_space():
                         's3_file_path',
                         'space_name',
                         'space_schema',
-                        'vds_path']
+                        'vds_path','status']
         value = json_converter.filter_rows(data, rows_to_keep)
         space = object_mapper.map_to(value, Space)
-        data = {"bi_data_source_id":data['bi_data_source_id'],"account_id":data["account_id"],"data_source_config_id":"Null"}
-        result = space_service.find_by_values(data, 'account_bi_data_source')
+        value = {"bi_data_source_id": data['bi_data_source_id'],
+                 "account_id": data["account_id"]}
+        result = space_service.find_by_values(value, 'account_bi_data_source')
         if len(result) == 0:
             return jsonify(constant.missing_response), 406
+        result_2 = space_service.find_spaces_by_account_id(
+            data["account_id"], data['bi_data_source_id'], space=space.space_name)
+        if len(result_2) != 0:
+            return jsonify(constant.duplicate_entry_response), 406
         inserted_space = space_service.save(space)[0]
         space_service.update_data_source(
+            bi_data_source_id=data["bi_data_source_id"], account_id=data["account_id"])
+        space_service.mapp_space(
             space_id=inserted_space["id"], bi_data_source_id=data["bi_data_source_id"], account_id=data["account_id"])
-
         inserted_space["space_schema"] = json.loads(
             inserted_space["space_schema"])
         return jsonify({"space": inserted_space})
@@ -101,15 +107,40 @@ def update_space(space_id):
 
 @space_blueprint.route("/<space_id>/", methods=['DELETE'])
 def delete_space(space_id):
+    spaces = space_service.find_by_id(space_id)
+    if len(spaces) == 0:
+        return jsonify(constant.space_missing_response), 406
     file_space_registry = ObjectMapper().map_to(
         {"space_id": space_id}, FileSpaceRegistry)
     file_space_registry_service.delete(file_space_registry)
-    spaces = space_service.find_by_id(space_id)
     space = ObjectMapper().map_to(spaces[0], Space)
+    space.space_name = space.space_name+'_'+str(time.time()).split(".")[0]
     space.id = space_id
     space.is_deleted = True
+
+    try:
+        AwsHelper.delete_object_from_s3(s3_paths= Configuration.S3_PATH + str(space_id),s3_access_key=Configuration.S3_ACCESS_KEY,
+                                                    s3_secret_key=Configuration.S3_ACCESS_SECRET_KEY)
+    except:
+        pass
     space_service.update(space)
     return jsonify({"msg": f"space with id={space_id} deleted successfully!!!"})
+
+@space_blueprint.route("/<space_id>/revert", methods=['PUT'])
+def revert_delete_space(space_id):
+    spaces = space_service.find_by_id_all_status(space_id)
+    if len(spaces) == 0:
+        return jsonify(constant.space_missing_response), 406
+    # file_space_registry = ObjectMapper().map_to(
+    #     {"space_id": space_id}, FileSpaceRegistry)
+    # file_space_registry_service.delete(file_space_registry)
+    space = ObjectMapper().map_to(spaces[0], Space)
+    space.space_name = "_".join(space.space_name.split('_')[:-1])
+    space.id = space_id
+    space.is_deleted = False
+    space_service.update(space)
+    return jsonify({"msg": f"space with id={space_id} deleted successfully!!!"})
+
 
 
 @space_blueprint.route("/<space_id>/file/", methods=['POST'])
@@ -137,8 +168,16 @@ def add_file_to_space(space_id):
         file.s3_file_path = json.dumps(s3_paths)
         # updating the S3 path in file
         updated_file = file_service.update(file)
+        for file in updated_file:
+            file["file_schema"] = json.loads(
+                file["file_schema"]) if file["file_schema"] else {}
+            file["column_mapping"] = json.loads(
+                file["column_mapping"]) if file["column_mapping"] else {}
         # updating the space schema
         space = space_service.update(space)
+        if space and len(space):
+            space = space[0]
+            space["space_schema"] = json.loads(space["space_schema"])
         # registering the file in file_space_mapping
         file_space_register = FileSpaceRegistry(
             file_id=file_id, space_id=space_id)
@@ -159,46 +198,70 @@ def get_all_files_in_space(space_id):
     spaces = space_service.find_by_id(space_id)
     if len(spaces) == 0:
         return jsonify(constant.space_missing_response), 406
+    files = file_space_registry_service.find_files_by_space_id(space_id)
+    for file in files:
+        file["file_schema"] = json.loads(
+            file["file_schema"]) if file["file_schema"] else {}
+        file["column_mapping"] = json.loads(
+            file["column_mapping"]) if file["column_mapping"] else {}
+        file["s3_file_path"] = json.loads(
+            file["s3_file_path"]) if file["s3_file_path"] else {}
     return jsonify({
-        "file_space_registry": file_space_registry_service.find_files_by_space_id(space_id)
+        "files": files
     })
 
 
-@space_blueprint.route("account/<account_id>/file/", methods=['POST'])
+@space_blueprint.route("/account/<account_id>/file/", methods=['POST'])
 def get_all_files_by_account_id(account_id):
     data = request.json
     bi_data_source_id = data['bi_data_source_id']
-    data = {"bi_data_source_id":bi_data_source_id,"account_id":account_id}
+    data = {"bi_data_source_id": bi_data_source_id, "account_id": account_id}
     result = space_service.find_by_values(data, 'account_bi_data_source')
     if len(result) == 0:
         return jsonify(constant.missing_response), 406
-    # return jsonify({
-    #     "file_space_registry": file_spaces,
-    #     "regitry": file_space_registry
-    # })
+    files = file_space_registry_service.find_files_by_account_id(
+        account_id, bi_data_source_id)
+    for file in files:
+        file["file_schema"] = json.loads(
+            file["file_schema"]) if file["file_schema"] else {}
+        file["column_mapping"] = json.loads(
+            file["column_mapping"]) if file["column_mapping"] else {}
+        file["s3_file_path"] = json.loads(
+            file["s3_file_path"]) if file["s3_file_path"] else {}
     return jsonify({
-        "file_space_registry": file_space_registry_service.find_files_by_account_id(account_id,bi_data_source_id)
+        "file_space_registry": files
     })
+    # return jsonify({
+    #     "files": file_space_registry_service.find_files_by_account_id(account_id, bi_data_source_id)
+    # })
 
 
+@space_blueprint.route("/accounts/source/", methods=['get'])
+def get_all_spaces_by_account_id():
+    data = request.args.to_dict()
+    bi_data_source_id = data.get("bi_data_source_id")
+    status = data.get("status")
+    if bi_data_source_id and type(bi_data_source_id) == str and bi_data_source_id.isdigit():
+        data["bi_data_source_id"] = int(bi_data_source_id)
 
-@space_blueprint.route("account/<account_id>/space", methods=['POST'])
-def get_all_spaces_by_account_id(account_id):
-    data = request.json
+    if status and type(status) == str and status.isdigit():
+        data["status"] = int(status)
+
+    validation = exception_handler.validate_request(data)
+    if validation != True:
+        return validation, 400
     bi_data_source_id = data['bi_data_source_id']
-    data = {"bi_data_source_id":bi_data_source_id,"account_id":account_id}
+    account_id = data['account_id']
+    data = {"bi_data_source_id": bi_data_source_id,
+            "account_id": account_id}
     result = space_service.find_by_values(data, 'account_bi_data_source')
     if len(result) == 0:
         return jsonify(constant.missing_response), 406
     spaces = space_service.find_spaces_by_account_id(
-        account_id, bi_data_source_id)
+        account_id, bi_data_source_id, status=status)
     valid_spaces = []
-    # for space in spaces:
-    #     valid_spaces.append({
-    #         "file_name": space["file_name"],
-    #         "id": space["id"],
-    #     })
-
+    for space in spaces:
+        space["space_schema"] = json.loads(space["space_schema"])
     return jsonify({
         "spaces": spaces
     })
@@ -219,6 +282,7 @@ def format_space(space_id):
     return folder_format_response
     # except Exception as e:
     #     handle_exception(e)
+
 
 @space_blueprint.route("/<space_id>/format/update", methods=['POST'])
 def update_format_space(space_id):
