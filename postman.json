@@ -1,0 +1,832 @@
+{
+	"info": {
+		"_postman_id": "769635b8-1f35-47c7-bacb-47ed11ed96bf",
+		"name": "csv",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27184744",
+		"_collection_link": "https://orange-star-661472.postman.co/workspace/New-Team-Workspace~2ec82b92-aee6-4d27-b1de-0666df205ef6/collection/27184744-769635b8-1f35-47c7-bacb-47ed11ed96bf?action=share&source=collection_link&creator=27184744"
+	},
+	"item": [
+		{
+			"name": "space",
+			"item": [
+				{
+					"name": "get all spaces",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/v1/space/8/file",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"8",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get space by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/v1/space/46",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"46"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create space",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_deleted\": 0,\n    \"s3_file_path\": null,\n    \"space_name\": \"semrush2\",\n    \"space_schema\": null,\n    \"vds_path\": null,\n    \"account_id\":\"\",\n    \"bi_data_source_id\":\"hello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/space",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update space",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"created_date\": \"2023-07-14 09:57:33\",\n    \"id\": 88,\n    \"is_deleted\": 0,\n    \"s3_file_path\": null,\n    \"space_name\": \"facebook_new\",\n    \"space_schema\": null,\n    \"updated_date\": \"2023-07-14 09:57:33\",\n    \"vds_path\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/space/88",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"88"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete space",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/v1/space/8",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Format folder",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/v1/space/11/format",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"11",
+								"format"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_all_spaces",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Production}}/api/v1/space/accounts/source/?account_id=0011T00002hE9dHQAS&bi_data_source_id=42",
+							"host": [
+								"{{Production}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"accounts",
+								"source",
+								""
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "0011T00002hE9dHQAS"
+								},
+								{
+									"key": "bi_data_source_id",
+									"value": "42"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload to s3",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"space_schema\": [\n            {\n                \"name\": \"Keyword\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"FLOAT\": 0.008909479686386316,\n                    \"INTEGER\": 0.15146115466856735,\n                    \"STRING\": 99.83962936564504\n                }\n            },\n            {\n                \"name\": \"Previous Position\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Traffic\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Intents\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"INTEGER\": 68.0996079828938,\n                    \"STRING\": 31.900392017106203\n                }\n            },\n            {\n                \"name\": \"Search Volume\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Url\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            {\n                \"name\": \"date\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            {\n                \"name\": \"client_id\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            }\n        ],\n\"file_id\":36\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/space/26/file",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"26",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create vds",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"vds_name\":\"monocle.test2\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/space/1/vds",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"1",
+								"vds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alter vds",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/v1/space/1/format/update",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"1",
+								"format",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_all_files",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bi_data_source_id\":10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/space/account/0015000000b1NZtAAM/space",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"account",
+								"0015000000b1NZtAAM",
+								"space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "files_by_space",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Production}}/api/v1/space/1/file/",
+							"host": [
+								"{{Production}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"1",
+								"file",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "file space registry",
+			"item": [
+				{
+					"name": "get file to space",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/space/7/file",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"7",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add file in space",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"file_id\": 16,\n    \"space_schema\":[\n                {\n                    \"name\": \"Keyword\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"STRING\",\n                    \"types_found\": {\n                        \"FLOAT\": 0.008909479686386316,\n                        \"INTEGER\": 0.15146115466856735,\n                        \"STRING\": 99.83962936564504\n                    }\n                },\n                {\n                    \"name\": \"Previous Position\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"INTEGER\",\n                    \"types_found\": {\n                        \"INTEGER\": 100.0\n                    }\n                },\n                {\n                    \"name\": \"Traffic\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"INTEGER\",\n                    \"types_found\": {\n                        \"INTEGER\": 100.0\n                    }\n                },\n                {\n                    \"name\": \"Intents\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"STRING\",\n                    \"types_found\": {\n                        \"INTEGER\": 68.0996079828938,\n                        \"STRING\": 31.900392017106203\n                    }\n                },\n                {\n                    \"name\": \"Search Volume\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"INTEGER\",\n                    \"types_found\": {\n                        \"INTEGER\": 100.0\n                    }\n                },\n                {\n                    \"name\": \"Url\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"STRING\",\n                    \"types_found\": {\n                        \"STRING\": 100.0\n                    }\n                },\n                {\n                    \"name\": \"date\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"STRING\",\n                    \"types_found\": {\n                        \"STRING\": 100.0\n                    }\n                },\n                {\n                    \"name\": \"client_id\",\n                    \"nullable\": false,\n                    \"total\": 22448,\n                    \"type\": \"INTEGER\",\n                    \"types_found\": {\n                        \"INTEGER\": 100.0\n                    }\n                }\n            ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/v1/space/9/file",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"space",
+								"9",
+								"file"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "file",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/v1/file",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transformation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transformations\": [\n        {\n            \"col\": \"Cost\",\n            \"type\": \"regex\",\n            \"regex\":\"$\",\n            \"replace_by\":\"\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4448/api/v1/file/19/transform",
+							"host": [
+								"localhost"
+							],
+							"port": "4448",
+							"path": [
+								"api",
+								"v1",
+								"file",
+								"19",
+								"transform"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Production}}/api/v1/file/1",
+							"host": [
+								"{{Production}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"file",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "uploadfilegoogle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file_separator",
+									"value": ",",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "googlesheet",
+									"type": "text"
+								},
+								{
+									"key": "column_mapping",
+									"value": "{}",
+									"type": "text"
+								},
+								{
+									"key": "link",
+									"value": "1ShsJ4zVSw5AeaeI_t5hpA4S2ODRF2EEAu6N67j19_-8",
+									"type": "text"
+								},
+								{
+									"key": "filename",
+									"value": "Autonomous_Tech_V2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:4448/api/v1/file/",
+							"host": [
+								"localhost"
+							],
+							"port": "4448",
+							"path": [
+								"api",
+								"v1",
+								"file",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view_files",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Custom-Passcode",
+								"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+								"type": "text"
+							}
+						]
+					},
+					"response": []
+				},
+				{
+					"name": "downloadfrom_s3",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "schema",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\n            \"0\": {\n                \"name\": \"id\",\n                \"nullable\": false,\n                \"total\": 32,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            \"1\": {\n                \"name\": \"account_id\",\n                \"nullable\": false,\n                \"total\": 32,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            \"2\": {\n                \"name\": \"name\",\n                \"nullable\": false,\n                \"total\": 32,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            \"3\": {\n                \"name\": \"id\",\n                \"nullable\": false,\n                \"total\": 32,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            \"4\": {\n                \"name\": \"custom_event_type\",\n                \"nullable\": true,\n                \"total\": 32,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            \"5\": {\n                \"name\": \"custom_conversion_id\",\n                \"nullable\": false,\n                \"total\": 32,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 81.25,\n                    \"STRING\": 18.75\n                }\n            },\n            \"6\": {\n                \"name\": \"custom_conversion_name\",\n                \"nullable\": false,\n                \"total\": 32,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            }\n        }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/schema/13",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"schema",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "File Schema",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Custom-Passcode",
+						"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/file/17",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"17"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "schema mapping",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					},
+					{
+						"key": "X-Custom-Passcode",
+						"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"column_mappings\": {\n        \"id\": \"client_id1\",\n        \"account_id\": \"ACCOUNT_ID1\",\n        \"name\": \"NAME1\",\n        \"id.1\": \"ID.11\",\n        \"custom_event_type\": \"CUSTOM_EVENT_TYPE1\",\n        \"custom_conversion_id\": \"CUSTOM_CONVERSION_ID\",\n        \"custom_conversion_name\": \"CUSTOM_CONVERSION_NAME\"\n    },\"transformation\":[\n        {\n            \"type\":\"rename\",\n            \"col\":\"NAME1\",\n            \"new_name\":\"new Name\"\n        },{\n            \"type\":\"regex\",\n            \"col\":\"NAME1\",\n            \"regex\":\"acbd\"\n        },{\n            \"type\":\"date_filer\",\n            \"col\":\"date\",\n            \"operator\":\">\",\n            \"compare\":\"1234\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/file/1/mapping",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						"1",
+						"mapping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "merge schema",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Custom-Passcode",
+						"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"schema_1\": [\n            {\n                \"name\": \"Keyword\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"FLOAT\": 0.008909479686386316,\n                    \"INTEGER\": 0.15146115466856735,\n                    \"STRING\": 99.83962936564504\n                }\n            },\n            {\n                \"name\": \"Previous Position\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Traffic\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Intents\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"INTEGER\": 68.0996079828938,\n                    \"STRING\": 31.900392017106203\n                }\n            },\n            {\n                \"name\": \"Search Volume\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Url\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            {\n                \"name\": \"date\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            {\n                \"name\": \"client_id\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            }\n        ],\"schema_2\": [\n            {\n                \"name\": \"Keyword\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"FLOAT\": 0.008909479686386316,\n                    \"INTEGER\": 0.15146115466856735,\n                    \"STRING\": 99.83962936564504\n                }\n            },\n            {\n                \"name\": \"Previous Position\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Traffic\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Intents\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"INTEGER\": 68.0996079828938,\n                    \"STRING\": 31.900392017106203\n                }\n            },\n            {\n                \"name\": \"Search Volume\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            },\n            {\n                \"name\": \"Url\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            {\n                \"name\": \"date\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"STRING\",\n                \"types_found\": {\n                    \"STRING\": 100.0\n                }\n            },\n            {\n                \"name\": \"client_id\",\n                \"nullable\": false,\n                \"total\": 22448,\n                \"type\": \"INTEGER\",\n                \"types_found\": {\n                    \"INTEGER\": 100.0\n                }\n            }\n        ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4448/api/v1/schema/merge/",
+					"host": [
+						"localhost"
+					],
+					"port": "4448",
+					"path": [
+						"api",
+						"v1",
+						"schema",
+						"merge",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Custom-Passcode",
+						"value": "ZG5OalFBPT0hISYhIU1qQXlNdz09",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "csv_file",
+							"type": "file",
+							"src": "/home/bdahal/Downloads/phpfzqloj-2022-2023-database-updated-4323.csv"
+						},
+						{
+							"key": "seperator",
+							"value": ",",
+							"type": "default"
+						},
+						{
+							"key": "category",
+							"value": "csv",
+							"type": "default"
+						},
+						{
+							"key": "column_mapping",
+							"value": "{}",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/file/",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"file",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
