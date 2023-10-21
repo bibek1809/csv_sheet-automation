@@ -15,6 +15,8 @@ class FilterTransformer(Transformer):
         if operator == "between":
             condition = (dataframe[col] <= value[0]) & (dataframe[col] >= value[1])
             dataframe = dataframe.loc[condition]
+
+            
         else:
             if operator == "<":
                 dataframe = dataframe.loc[dataframe[col] < value]
@@ -26,5 +28,7 @@ class FilterTransformer(Transformer):
                 dataframe = dataframe.loc[dataframe[col] <= value]
             elif operator == ">=":
                 dataframe = dataframe.loc[dataframe[col] >= value]
+            elif operator == "!=":
+                dataframe = dataframe.loc[dataframe[col] != value]
 
         return dataframe

@@ -12,4 +12,6 @@ services:
       - .env
     volumes:
       - .:/app
+      - ./storage:/app/storage:rw
     network_mode: host
+

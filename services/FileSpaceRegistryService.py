@@ -7,18 +7,37 @@ class FileSpaceRegistryService(JDBCRepository):
         super().__init__(entity_name="file_space_register", id="id", jdbcDataSource=jdbcDataSource)
 
     def find_files_by_space_id(self, space_id):
+<<<<<<< HEAD
         return self.jdbcDataSource.execute(f"""SELECT f.*,fs.space_id FROM csv_file as f 
                                            join {self.entity_name} as fs
                                            on fs.file_id = f.id
                                            and  fs.space_id = {space_id}
                                            """)
+=======
+            return self.jdbcDataSource.execute(f"""SELECT f.*,fs.space_id FROM csv_file as f 
+                                            join {self.entity_name} as fs
+                                            on fs.file_id = f.id
+                                            join csv_space AS s 
+                                           on s.id = fs.space_id
+                                            and  fs.space_id = {space_id}
+                                            AND s.is_deleted IS FALSE
+                                            and s.space_name NOT REGEXP '_[0-9]{10}$';
+                                            """)
+>>>>>>> 09aef0b76d860fce1da2389db91a442ae9301bbe
 
     def find_files_by_account_id(self, account_id,bi_data_source_id):
         query = f"""SELECT f.*,fs.space_id,a.account_id FROM csv_file as f 
                                            join {self.entity_name} as fs
                                            on fs.file_id = f.id
+                                           join csv_space_mapper_table as map
+                                           on map.space_id = fs.space_id
+                                           join csv_space AS s 
+                                           on s.id = fs.space_id
                                            join account_bi_data_source as a
-                                           on a.data_source_config_id = fs.space_id
+                                            on a.id = map.id
                                            WHERE a.account_id = '{account_id}'
+                                            AND s.is_deleted IS FALSE
+                                            and s.space_name !~ '_\\d{10}$'
                                             and a.bi_data_source_id = {bi_data_source_id} group by f.id"""
         return self.jdbcDataSource.execute(query)
+                      

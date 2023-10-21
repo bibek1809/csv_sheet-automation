@@ -253,7 +253,7 @@ class CsvSchemaInference:
 
             if "STRING" in _types or len(_types) > 2:
                 _type = "STRING"
-                
+
             else:
                 if {"INTEGER", "FLOAT"}.issubset(_types):
                     _type = "FLOAT"
@@ -348,14 +348,14 @@ class CsvSchemaInference:
                 break
 
         return result
-    
-    def find_higher_percentage_type(self,types):
+
+    def find_higher_percentage_type(self, types):
         total = sum(types.values())
         if total == 0:
-            return None  
+            return None
         percentage = {key: value / total for key, value in types.items()}
         max_key = max(percentage, key=percentage.get)
-        
+
         return max_key
 
     def run_inference(self, filename):
@@ -422,7 +422,8 @@ class SchemaInference:
         "INTEGER": 1,
         "FLOAT": 2,
         "DOUBLE": 3,
-        "STRING": 4
+        "STRING": 4,
+        "DATE": 5
     }
 
     def __datatype_merger(self, datatype_1, datatype_2):

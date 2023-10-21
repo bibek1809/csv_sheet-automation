@@ -68,3 +68,14 @@ def delete_object_from_s3(s3_paths, s3_access_key, s3_secret_key):
             aws_secret_access_key=s3_secret_key
         )
     )
+
+
+def download_object_from_s3(s3_paths, local_file,s3_access_key, s3_secret_key):
+    return wr.s3.download(
+        path=s3_paths,
+        local_file=local_file,
+        boto3_session=boto3.Session(
+            aws_access_key_id=s3_access_key,
+            aws_secret_access_key=s3_secret_key
+        )
+    )

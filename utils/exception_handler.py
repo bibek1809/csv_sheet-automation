@@ -116,7 +116,7 @@ def validate_datatypes(data):
             if key == 'link':
                 import re
                 url_pattern = re.compile(r"https?://\S+")
-                if not re.fullmatch(url_pattern, data[key]):
+                if  re.fullmatch(url_pattern, data[key]):
                     response = {
                         "success": False,
                         "code": 412,

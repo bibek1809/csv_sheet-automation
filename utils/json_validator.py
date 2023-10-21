@@ -1,7 +1,7 @@
 data = {
     "FileController": {
-        "upload": {"first": ['seperator', 'category', 'column_mapping'],
-                   "second": ['link', 'seperator', 'category', 'column_mapping', 'filename']},
+        "upload": {"first": ['file_separator', 'category', 'column_mapping'],
+                   "second": ['link', 'file_separator', 'category', 'column_mapping', 'filename']},
         "column_mapping": ['column_mappings', 'transformation'],
         "transform": ['transformations']
     },
