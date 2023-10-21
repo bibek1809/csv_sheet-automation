@@ -9,7 +9,7 @@ env = Env.instance()
 DEFAULT_LIMITS = env.get_or_default("limiter.limits", "['1 per minute']")
 X_CUSTOM_PASSCODE = env.get_or_default("limiter.passcode", "passcode")
 
-S3_PATH = env.get_or_default("aws.s3.bucket.path", "s3://monocle/csv")
+S3_PATH = env.get_or_default("aws.s3.bucket.path", "s3://monocle/csv/")
 S3_ACCESS_KEY = env.get_or_default("aws.s3.access.key", "access-key")
 S3_ACCESS_SECRET_KEY = env.get_or_default(
     "aws.s3.access.key.secret", "access-key-secret")

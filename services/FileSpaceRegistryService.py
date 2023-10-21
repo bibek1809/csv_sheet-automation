@@ -7,7 +7,11 @@ class FileSpaceRegistryService(JDBCRepository):
         super().__init__(entity_name="file_space_register", id="id", jdbcDataSource=jdbcDataSource)
 
     def find_files_by_space_id(self, space_id):
-        return self.jdbcDataSource.execute(f"SELECT * FROM {self.entity_name} WHERE space_id = {space_id}")
+        return self.jdbcDataSource.execute(f"""SELECT f.*,fs.space_id FROM csv_file as f 
+                                           join {self.entity_name} as fs
+                                           on fs.file_id = f.id
+                                           and  fs.space_id = {space_id}
+                                           """)
 
     def find_files_by_account_id(self, account_id,bi_data_source_id):
         query = f"""SELECT f.*,fs.space_id,a.account_id FROM csv_file as f 
