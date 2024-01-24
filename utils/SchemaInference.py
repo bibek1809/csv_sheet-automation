@@ -1,6 +1,6 @@
 class SchemaInference:
     DATATYPE_RANK = {
-        "INTEGER": 1,
+        "LONG": 1,
         "FLOAT": 2,
         "DOUBLE": 3,
         "STRING": 4

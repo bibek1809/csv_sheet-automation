@@ -9,6 +9,9 @@ class JDBCRepository:
         self.id = id
         self.jdbcDataSource = jdbcDataSource
         pass
+    
+    def execute_query(self,query):
+        self.jdbcDataSource.cud_execute(query)
 
     def find_last_added(self):
         return self.jdbcDataSource.execute(f"SELECT * FROM {self.entity_name} order by 1 desc limit 1")

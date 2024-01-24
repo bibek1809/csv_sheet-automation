@@ -121,6 +121,11 @@ def delete_space(space_id):
     try:
         AwsHelper.delete_object_from_s3(s3_paths= Configuration.S3_PATH + str(space_id),s3_access_key=Configuration.S3_ACCESS_KEY,
                                                     s3_secret_key=Configuration.S3_ACCESS_SECRET_KEY)
+        space_catalog_path = Configuration.DREMIO_CATALOG_PATH + str(space_id)
+        dremio_helper.alter_dataset(space_catalog_path)
+
+    # create VDS for the particular folder if not created or else alter vds
+
     except:
         pass
     space_service.update(space)
@@ -169,6 +174,7 @@ def add_file_to_space(space_id):
         # updating the S3 path in file
         updated_file = file_service.update(file)
         for file in updated_file:
+            file["file_name"] = "_".join(file["file_name"].split('_')[:-1])+'.'+file["file_name"].split('.')[-1]
             file["file_schema"] = json.loads(
                 file["file_schema"]) if file["file_schema"] else {}
             file["column_mapping"] = json.loads(
@@ -200,6 +206,7 @@ def get_all_files_in_space(space_id):
         return jsonify(constant.space_missing_response), 406
     files = file_space_registry_service.find_files_by_space_id(space_id)
     for file in files:
+        file["file_name"] = "_".join(file["file_name"].split('_')[:-1])+'.'+file["file_name"].split('.')[-1]
         file["file_schema"] = json.loads(
             file["file_schema"]) if file["file_schema"] else {}
         file["column_mapping"] = json.loads(
@@ -222,6 +229,7 @@ def get_all_files_by_account_id(account_id):
     files = file_space_registry_service.find_files_by_account_id(
         account_id, bi_data_source_id)
     for file in files:
+        file["file_name"] = "_".join(file["file_name"].split('_')[:-1])+'.'+file["file_name"].split('.')[-1]
         file["file_schema"] = json.loads(
             file["file_schema"]) if file["file_schema"] else {}
         file["column_mapping"] = json.loads(

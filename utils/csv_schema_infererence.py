@@ -22,7 +22,7 @@ class DetectType:
             return "STRING"
 
         if float(value).is_integer():
-            return "INTEGER"
+            return "LONG"
         else:
             return "FLOAT"
 
@@ -183,7 +183,7 @@ class CsvSchemaInference:
         self.accuracy = acc
         self.__schema = {}
         self.max_length = max_length
-        self.data_types = {"STRING", "INTEGER", "FLOAT",
+        self.data_types = {"STRING", "LONG", "FLOAT",
                            "DATETIME", "DATE", "TIME", "TIMESTAMP", "BOOLEAN"}
         self.batch_size = batch_size
 
@@ -255,7 +255,7 @@ class CsvSchemaInference:
                 _type = "STRING"
 
             else:
-                if {"INTEGER", "FLOAT"}.issubset(_types):
+                if {"LONG", "FLOAT"}.issubset(_types):
                     _type = "FLOAT"
                 else:
                     _type = "STRING"
@@ -419,7 +419,7 @@ class CsvSchemaInference:
 
 class SchemaInference:
     DATATYPE_RANK = {
-        "INTEGER": 1,
+        "LONG": 1,
         "FLOAT": 2,
         "DOUBLE": 3,
         "STRING": 4,

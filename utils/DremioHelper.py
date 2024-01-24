@@ -69,6 +69,7 @@ class DremioHelper:
 
         if catalog["entityType"] == "dataset":
             # already formatted, so alter the table or vds
+            #self.forget_dataset("\"" + "\".\"".join(catalog['path']) + "\"")
             return self.alter_dataset("\"" + "\".\"".join(catalog['path']) + "\"")
 
         format_folder_response = requests.request("POST", self.url + format_folder_endpoint + catalog_id,
@@ -106,18 +107,22 @@ class DremioHelper:
             "Authorization": "_dremio" + self.get_access_token(),
             'Content-Type': 'application/json'
         }
-        job_api_response = requests.request("POST", self.url + job_api_endpoint, headers=job_headers, data=job_payload)
+        job_api_response = requests.request("GET", self.url + job_api_endpoint, headers=job_headers, data=job_payload)
         if job_api_response.status_code == 200:
             return job_api_response.json()
         else:
             raise BaseException(job_api_response.json())
         pass
 
-    def alter_dataset(self, dataset):
+    def forget_dataset(self, dataset):
         print(dataset)
         #dataset = dataset.replace('/','"."').replace('".', '', 1)+'"'
+        query = f"ALTER TABLE {dataset} forget METADATA"
+        return self.execute_sql_query(query=query)
+    
+    def alter_dataset(self, dataset):
+        #dataset = dataset.replace('/','"."').replace('".', '', 1)+'"'
         query = f"ALTER TABLE {dataset} REFRESH METADATA"
-        print(query)
         return self.execute_sql_query(query=query)
     
     def create_vds(self,vds_name,dataset):

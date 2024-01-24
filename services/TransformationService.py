@@ -28,7 +28,18 @@ class TransformationService:
 
         }
 
-
+    # Function to remove commas and convert to numeric
+    def remove_commas_and_convert(self,value):
+        if isinstance(value, str):
+            try:
+                # Check if the value can be converted to a numeric type (int or float)
+                numeric_value = float(value.replace(',', ''))
+                if numeric_value.is_integer():
+                    return int(numeric_value)
+                return numeric_value
+            except ValueError:
+                pass
+        return value
 
 
     def default_column_mapping_generator(self, file: File):
@@ -47,6 +58,33 @@ class TransformationService:
                     name.split('=')[0].strip().replace(' ','_').replace('-',' ')
                     )
         return column_mapping
+    
+    def replace_variables(self,expression):
+        # Define a regex pattern to match !#variable#!
+        pattern = r'!#(\w+)#!'
+
+        # Define a function to replace matched patterns
+        def replace(match):
+            variable = match.group(1)
+            return f"dataframe['{variable}']"
+
+        # Use re.sub with the defined function to replace the pattern
+        replaced_expression = re.sub(pattern, replace, expression)
+        return replaced_expression
+
+    def custom_columns(self,dataframe):
+        columns = dataframe.columns.tolist()
+        for column in columns:
+            if '=' in column:
+                formula = self.replace_variables(column.split('=')[-1])
+                try:
+                    dataframe[column] = eval(formula)
+                except Exception:
+                    pass
+                dataframe[column] = dataframe[column].fillna(0)
+                #dataframe[column.split('=')[0]] = eval(formula)
+                #dataframe.drop(columns= column, inplace=True)
+        return dataframe
 
     def transform_columns(self, file: File):
         if len(file.file_separator) == 1:
@@ -54,6 +92,10 @@ class TransformationService:
         else:
             dataframe = pd.read_csv(self.raw_file_path + file.file_name, sep=file.file_separator, on_bad_lines='skip',engine='python')
         dataframe = dataframe.applymap(lambda x: x.strip() if isinstance(x, str) else x).drop_duplicates()
+        dataframe = dataframe.applymap(self.remove_commas_and_convert)
+        dataframe = dataframe.applymap(self.remove_symbols_and_convert)
+        #custom column for formulation done here
+        dataframe = self.custom_columns(dataframe)
         self.write_to_file(dataframe.rename(columns=file.column_mapping), file)
 
     def transform_columns_(self, file: File):
@@ -63,6 +105,30 @@ class TransformationService:
             dataframe = pd.read_csv(self.transform_file_path + file.file_name, sep=file.file_separator, on_bad_lines='skip',engine='python')
         self.write_to_file(dataframe.rename(columns=file.column_mapping), file)
 
+    def remove_string(self, file: File):
+        if len(file.file_separator) == 1:
+            dataframe = pd.read_csv(self.transform_file_path + file.file_name, sep=file.file_separator,engine='python')
+        else:
+            dataframe = pd.read_csv(self.transform_file_path + file.file_name, sep=file.file_separator, on_bad_lines='skip',engine='python')
+        dataframe = dataframe.replace(['\$', '%'], '', regex=True)
+        self.write_to_file(dataframe, file)
+
+
+    def remove_symbols_and_convert(self, value):
+        if isinstance(value, str):
+            try:
+                # Replace '$' or '%' and remove commas
+                modified_value = value.replace('$', '').replace('%', '').replace(',', '')
+                numeric_value = float(modified_value)
+                
+                # Check if the value after modification can be converted to an integer or float
+                if numeric_value.is_integer():
+                    return int(numeric_value)
+                return numeric_value
+            except ValueError:
+                pass
+        return value
+    
     def get_transformed_dataframe(self, file: File):
         if len(file.file_separator) == 1:
             return pd.read_csv(self.transform_file_path + file.file_name, sep=file.file_separator,engine='python')

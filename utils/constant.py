@@ -50,9 +50,9 @@ duplicate_entry_response={
 "success": False,
 "code": 406,
 "error": 'BAD_REQUEST',
-"message": "Duplicate entry  for key 'space_name'",
-"traceback": f"Duplicate entry for key 'space_name'",
-"description": "Duplicate entry  for key 'space_name'"
+"message": "The File Name Already Exists!",
+"traceback": f"The File Name Already Exists!",
+"description": "The File Name Already Exists!"
 }
 date_missing_response= {  
 "success":False,
@@ -88,3 +88,4 @@ Schema_not_match_response= {
 "traceback": "Invalid Schema Merge Request",
 "description": "Invalid Schema Merge Request"
 }
+restore_query = "call csv_db_restore()"

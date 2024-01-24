@@ -4,14 +4,14 @@ services:
     image: csv-datamart:v1
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: on-failure
-    ports:
-      - 4448:4448
+    # Remove port bindings when using host network mode
+    # ports:
+    #   - 4448:4448
     env_file:
       - .env
     volumes:
       - .:/app
       - ./storage:/app/storage:rw
     network_mode: host
-

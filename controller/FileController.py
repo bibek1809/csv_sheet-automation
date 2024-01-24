@@ -33,11 +33,18 @@ raw_file_path = Configuration.RAW_FILE_PATH
 def handle_exception(e):
     return exception_handler.handle_exception(e)
 
-
+@file_blueprint.get("/update")
+def refresh_file():
+    from refresh_google.refresh import refresh
+    sheet = refresh()
+    sheet.start()
+    return {"success": True,
+            "message": "Google Sheet Refreshed"}
 @file_blueprint.get("/")
 def get_all_files():
     files = file_service.find_all()
     for file in files:
+        file["file_name"] = "_".join(file["file_name"].split('_')[:-1])+'.'+file["file_name"].split('.')[-1]
         file["file_schema"] = json.loads(
             file["file_schema"]) if file["file_schema"] else {}
         file["column_mapping"] = json.loads(
@@ -49,6 +56,7 @@ def get_all_files():
 def get_file_by_id(file_id):
     files = file_service.find_by_id(file_id)
     for file in files:
+        file["file_name"] = "_".join(file["file_name"].split('_')[:-1])+'.'+file["file_name"].split('.')[-1]
         file["file_schema"] = json.loads(
             file["file_schema"]) if file["file_schema"] else {}
         file["column_mapping"] = json.loads(
@@ -56,7 +64,7 @@ def get_file_by_id(file_id):
     return jsonify({"file": files})
 
 
-@file_blueprint.get("/<file_id>/view/")
+@file_blueprint.get("/<file_id>/view/local")
 def view_file(file_id):
     limit = request.args.get("limit")
     if limit is None:
@@ -117,7 +125,7 @@ def upload():
         try:
             if data['category'] == constant.file_category['CSV']:
                 csv_file = request.files['csv_file']
-                filename = str(time.time()).split(".")[0] + '_'+csv_file.filename
+                filename = ".".join(csv_file.filename.split('.')[:-1])+ '_' + str(time.time()).split(".")[0]+'.'+csv_file.filename.split('.')[-1]
                 allowed_extension = ['tsv','csv']
                 if filename.rsplit('.', 1)[1].lower() not in allowed_extension:
                     return jsonify(constant.invalid_file_response), 410
@@ -127,8 +135,7 @@ def upload():
                 gsheet_link = data.pop('link')
                 #print(link)
                 link = f"""https://docs.google.com/spreadsheets/d/{gsheet_link}/edit#gid=0"""
-                filename = str(time.time()).split(
-                    ".")[0]+ '_' + data.pop('filename')+'.csv'
+                filename = data.pop('filename')+ '_' + str(time.time()).split(".")[0] +'.csv'
                 # print(data)
                 domain = urlparse(link).netloc
                 segments = link.rpartition('/')
@@ -149,9 +156,9 @@ def upload():
         file.file_name = filename
         if gsheet_link:
             file.link = gsheet_link
-        file.column_mapping = transformation_service.default_column_mapping_generator(
-            file)
+        file.column_mapping = transformation_service.default_column_mapping_generator(file)
         transformation_service.transform_columns(file)
+        #transformation_service.remove_string(file)
         #schema = schema_service.generate_schema(file)
         if transformation_service.find_date(file):
             pass
@@ -184,6 +191,7 @@ def column_mapping(file_id):
         file.id = file_id
         file.column_mapping = data["column_mappings"]
         transformation_service.transform_columns_(file)
+        # transformation_service.remove_string(file)
         schema = schema_service.generate_schema(file)
         file.file_schema = schema
         file.is_transformed = None
@@ -255,29 +263,57 @@ def transform(file_id):
         return validation, 400
 
 
-@file_blueprint.get("/<file_id>/download/")
+@file_blueprint.get("/<file_id>/download/local")
 def download_file(file_id):
     files = file_service.find_by_id(file_id)
     if len(files) == 0:
         return jsonify(constant.file_missing_response), 406
     return send_file(Configuration.TRANSFORM_FILE_PATH+files[0]["file_name"], as_attachment=True)
 
-@file_blueprint.post("/download/s3")
-def download_file_s3():
-    data = request.json
-    validation = exception_handler.validate_request(data)
-    if validation == True:
-        path = data["path"]
-        file_name = path.split('/')[-1]
-        try:
-            AwsHelper.download_object_from_s3(s3_paths=path,local_file=Configuration.RAW_FILE_PATH+file_name,
-                                        s3_access_key=Configuration.S3_ACCESS_KEY,
-                                                        s3_secret_key=Configuration.S3_ACCESS_SECRET_KEY )
-            # return {"success":True,
-            #         "file_path":Configuration.RAW_FILE_PATH+file_name}
-            return send_file(Configuration.RAW_FILE_PATH+file_name, as_attachment=True)
-        except:
-            return {"success":False,
-                    "message":"Invalid File Path"}
+@file_blueprint.get("/<file_id>/download/")
+def download_file_s3(file_id):
+    files = file_service.find_by_id(file_id)
+    file = files[0]
+    if len(file) == 0:
+        return jsonify(constant.file_missing_response), 406
+    file_name = file["file_name"].split('_')[0]+'_'+str(time.time()).split(".")[0]+'.csv'
+    path=json.loads(file["s3_file_path"])["paths"][0]
+
+    try:
+        AwsHelper.download_object_from_s3(s3_paths=path,local_file=Configuration.RAW_FILE_PATH+file_name,
+                                    s3_access_key=Configuration.S3_ACCESS_KEY,
+                                                    s3_secret_key=Configuration.S3_ACCESS_SECRET_KEY )
+        return send_file(Configuration.RAW_FILE_PATH+file_name, as_attachment=True)
+    except:
+        return {"success":False,
+                "message":"Invalid File Path"}
+
+
+@file_blueprint.get("/<file_id>/view/")
+def view_file_s3(file_id):
+    limit = request.args.get("limit")
+    if limit is None:
+        limit = 5
     else:
-        return validation, 400
+        limit = int(limit)
+    files = file_service.find_by_id(file_id)
+    file = files[0]
+    if len(file) == 0:
+        return jsonify(constant.file_missing_response), 406
+    path=json.loads(file["s3_file_path"])["paths"][0]
+    try:
+        df = AwsHelper.read_dataframe(s3_paths=path,
+                                    s3_access_key=Configuration.S3_ACCESS_KEY,
+                                                    s3_secret_key=Configuration.S3_ACCESS_SECRET_KEY )
+        result = df.head(limit).to_json(orient='records')
+        row_length, df_columns = len(df), len(df.columns)
+        return jsonify({
+            "data": {
+                "result": json.loads(result),
+                "rows_length": row_length,
+                "column_length": df_columns
+            }
+        })
+    except:
+        return {"success":False,
+                "message":"Invalid File Path"}

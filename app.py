@@ -3,9 +3,9 @@ from flask import Flask, request
 from flask_limiter import Limiter
 from flask_cors import CORS
 from utils import Configuration, token_encryption
-from controller import FileController, SchemaController, SpaceController
+from controller import FileController, SchemaController, SpaceController,FileSpaceController
 from middleware.checkXCustomPasscode import PasscodeValidator
-
+from flask_restx import Api
 complete_env_path = os.getcwd() + "/.env"
 os.environ['env'] = complete_env_path
 
@@ -44,10 +44,11 @@ def add_custom_header():
         except Exception as e:
             return message
 
-
+api = Api(app, version='1.0', title='Your API', description='API Description')
 app.register_blueprint(FileController.file_blueprint)
 app.register_blueprint(SchemaController.schema_blueprint)
 app.register_blueprint(SpaceController.space_blueprint)
+app.register_blueprint(FileSpaceController.fileregistry_blueprint)
 
 
 @app.route("/", methods=['GET'])
@@ -62,3 +63,8 @@ def start():
 
 if __name__ == '__main__':
     start()
+
+@api.route('/swagger')
+class Swagger(Resource):
+    def get(self):
+        return jsonify(api.__schema__)
